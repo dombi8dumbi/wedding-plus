@@ -1,4 +1,4 @@
-# Wedding + 💍
+# Wedding + 
 
 Application web intelligente de planification et de gestion de mariage.
 
