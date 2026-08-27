@@ -1,0 +1,17 @@
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+app.use(cors());
+app.use(express.json());
+
+app.get("/api/health", (_req, res) => {
+  res.json({ success: true, message: "Wedding + API is running" });
+});
+
+app.listen(PORT, () => {
+  console.log(`Wedding + backend running on port ${PORT}`);
+});
