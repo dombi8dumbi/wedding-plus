@@ -1,22 +1,13 @@
 <template>
-  <main class="app">
-    <section class="hero">
-      <p class="eyebrow">Wedding +</p>
-      <h1>Organisez votre mariage, simplement.</h1>
-      <p>Une plateforme pour centraliser le planning, le budget, les prestataires et le Jour J.</p>
-      <button>Commencer</button>
-    </section>
-  </main>
+  <div class="app-shell">
+    <header class="topbar"><RouterLink to="/" class="brand">Wedding<span>+</span></RouterLink><nav><RouterLink to="/connexion">Se connecter</RouterLink><RouterLink to="/inscription" class="nav-cta">Créer un compte</RouterLink></nav></header>
+    <main class="hero">
+      <div class="hero-copy"><p class="eyebrow">Organisez • Planifiez • Vivez</p><h1>Votre mariage,<br><em>parfaitement orchestré.</em></h1><p class="intro">Wedding+ accompagne les couples dans l’organisation complète de leur mariage grâce à des outils intelligents et un assistant IA personnalisé.</p><div class="actions"><RouterLink to="/inscription" class="primary">Commencer</RouterLink><RouterLink to="/connexion" class="secondary">J’ai déjà un compte</RouterLink></div></div>
+      <div class="hero-card"><div class="ring">W<span>+</span></div><p>Votre grand jour</p><strong>commence ici.</strong><div class="sparkles">✦ ♡ ✦</div></div>
+    </main>
+  </div>
 </template>
-
 <style>
-:root { font-family: Inter, system-ui, sans-serif; color: #24202a; background: #faf8f6; }
-* { box-sizing: border-box; }
-body { margin: 0; }
-.app { min-height: 100vh; display: grid; place-items: center; padding: 32px; }
-.hero { max-width: 720px; text-align: center; }
-.eyebrow { letter-spacing: .15em; text-transform: uppercase; font-weight: 700; }
-h1 { font-size: clamp(2.5rem, 7vw, 5rem); line-height: 1; margin: 16px 0; }
-p { line-height: 1.6; }
-button { border: 0; border-radius: 999px; padding: 14px 24px; font-weight: 700; cursor: pointer; }
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;1,500&display=swap');
+:root{font-family:'DM Sans',system-ui,sans-serif;color:#30252a;background:#fffaf8}*{box-sizing:border-box}body{margin:0;min-width:320px}a{text-decoration:none;color:inherit}.app-shell{min-height:100vh;overflow:hidden;background:radial-gradient(circle at 80% 20%,#ffe8ef 0,transparent 28%),linear-gradient(135deg,#fff 0%,#fff7f4 100%)}.topbar{height:82px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,7vw,110px)}.brand{font-family:'Playfair Display',serif;font-size:32px;color:#bd2e64}.brand span{color:#c98a2e}nav{display:flex;gap:28px;font-size:14px;font-weight:600}.nav-cta{padding:11px 18px;border:1px solid #e8a7b9;border-radius:999px;color:#c52e68}.hero{max-width:1180px;margin:auto;min-height:calc(100vh - 82px);display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:70px;padding:40px 32px 90px}.eyebrow{color:#c98230;letter-spacing:.16em;text-transform:uppercase;font-size:12px;font-weight:700}h1{font-family:'Playfair Display',serif;font-size:clamp(48px,6vw,82px);line-height:1.04;font-weight:500;margin:18px 0}h1 em{color:#c62e68}.intro{max-width:580px;line-height:1.75;color:#75666b;font-size:17px}.actions{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}.primary,.secondary{padding:14px 24px;border-radius:999px;font-weight:700;font-size:14px}.primary{background:#e9437a;color:white;box-shadow:0 12px 28px #e9437a30}.secondary{border:1px solid #edc5cf;color:#bd3764;background:#fff}.hero-card{justify-self:center;width:min(360px,100%);aspect-ratio:1/1.18;border-radius:42%;background:linear-gradient(145deg,#fff,#fff0f1);border:1px solid #efc6a0;box-shadow:0 24px 70px #b85f7620;display:flex;flex-direction:column;align-items:center;justify-content:center}.ring{font-family:'Playfair Display',serif;font-size:130px;color:#c52e68}.ring span{color:#c98a2e;font-size:65px}.hero-card p{margin:22px 0 4px;color:#9b777f}.hero-card strong{font-family:'Playfair Display',serif;font-size:26px;font-weight:500}.sparkles{margin-top:30px;color:#d9953b;letter-spacing:14px}@media(max-width:760px){.topbar{height:70px}.topbar nav a:first-child{display:none}.hero{grid-template-columns:1fr;text-align:center;gap:40px}.intro{margin:auto}.actions{justify-content:center}.hero-card{width:280px}}
 </style>
