@@ -1,1 +1,52 @@
-<template><main class="dashboard"><header><RouterLink to="/" class="brand">Wedding<span>+</span></RouterLink><span>Bonjour 👋</span></header><section class="welcome"><p>Samedi 12 avril 2026</p><h1>Votre mariage avance bien.</h1><div class="progress"><span></span></div><strong>68% organisé</strong></section><section class="grid"><article><small>PROCHAINES TÂCHES</small><h2>Confirmer le traiteur</h2><p>Priorité haute • À faire</p></article><article><small>BUDGET</small><h2>12 450 €</h2><p>sur 20 000 €</p></article><article><small>INVITÉS</small><h2>120</h2><p>85 confirmés</p></article><article><small>ASSISTANT IA</small><h2>Wedding+ IA ✨</h2><p>Que puis-je faire pour vous aujourd’hui ?</p></article></section></main></template><style scoped>@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Playfair+Display:ital@0;1&display=swap');.dashboard{min-height:100vh;background:#fff9f7;padding:28px clamp(20px,7vw,100px);font-family:'DM Sans';color:#382b30}header{display:flex;justify-content:space-between;align-items:center}.brand{font:32px 'Playfair Display';color:#bd2e64}.brand span{color:#c98a2e}.welcome{margin:55px 0 30px;background:linear-gradient(135deg,#fff,#ffeef2);padding:38px;border-radius:28px}.welcome p{color:#b66f7e}.welcome h1{font:italic 44px 'Playfair Display';margin:8px 0 24px}.progress{height:9px;background:#f4dce2;border-radius:9px;max-width:650px}.progress span{display:block;width:68%;height:100%;background:#e9437a;border-radius:9px}.welcome strong{display:block;margin-top:12px;color:#c52e68}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.grid article{background:#fff;border:1px solid #f0dfe2;border-radius:22px;padding:25px;min-height:150px;box-shadow:0 8px 30px #9b64700b}.grid small{color:#c52e68;font-weight:700;letter-spacing:.1em}.grid h2{margin:18px 0 6px;font:25px 'Playfair Display'}.grid p{color:#7f7075}@media(max-width:700px){.grid{grid-template-columns:1fr}.welcome h1{font-size:34px}}</style>
+<template>
+  <main class="dashboard">
+    <header class="topbar">
+      <div class="left">
+        <span class="menu">☰</span>
+        <span class="hello">Bonjour Glorie !</span>
+      </div>
+      <div class="profile">👩🏾</div>
+    </header>
+
+    <section class="day-card">
+      <div><h1>JOUR J - 243</h1><p>Samedi 12 avril 2026</p></div>
+      <div class="flowers">🌸</div>
+    </section>
+
+    <section class="progress-section">
+      <div class="line-title"><span>Progression globale</span><strong>68%</strong></div>
+      <div class="progress"><span></span></div>
+    </section>
+
+    <section class="tasks">
+      <div class="section-title"><strong>Prochaines tâches</strong><RouterLink to="/tasks">Voir tout</RouterLink></div>
+      <div class="task"><span class="circle"></span><span>Confirmer le traiteur</span><span class="empty"></span></div>
+      <div class="task"><span class="circle pink"></span><span>Envoyer les invitations</span><span class="empty"></span></div>
+      <div class="task"><span class="circle gold"></span><span>Essai coiffure</span><span class="empty"></span></div>
+    </section>
+
+    <section class="stats">
+      <article><small>Budget</small><strong>12 450 €</strong><span>dépensés</span><b>♧</b></article>
+      <article><small>Invités</small><strong>120</strong><span>confirmés</span><b>♧</b></article>
+    </section>
+
+    <nav class="bottom-nav">
+      <RouterLink to="/dashboard" class="active"><i>⌂</i><span>Accueil</span></RouterLink>
+      <RouterLink to="/mariage"><i>♡</i><span>Mariage</span></RouterLink>
+      <RouterLink to="/tasks"><i>☑</i><span>Tâches</span></RouterLink>
+      <RouterLink to="/budget"><i>▣</i><span>Budget</span></RouterLink>
+      <RouterLink to="/ia"><i>•••</i><span>Plus</span></RouterLink>
+    </nav>
+  </main>
+</template>
+
+<style scoped>
+*{box-sizing:border-box}
+.dashboard{width:min(100%,430px);min-height:100vh;margin:auto;background:#fff;padding:18px 14px 82px;font-family:Arial,sans-serif;color:#292325;border:1px solid #efd5d7;border-radius:20px;box-shadow:0 5px 25px rgba(80,40,45,.08)}
+.topbar{height:38px;display:flex;align-items:center;justify-content:space-between}.left{display:flex;gap:20px;align-items:center}.menu{font-size:17px}.hello{font-size:12px}.profile{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#f8e1d8;font-size:16px}
+.day-card{height:73px;margin-top:10px;border:1px solid #f2dddd;border-radius:11px;background:linear-gradient(90deg,#fff6f5,#fff1ee);padding:13px 15px;display:flex;justify-content:space-between;overflow:hidden}.day-card h1{font-size:17px;margin:0 0 5px;font-weight:500}.day-card p{font-size:10px;margin:0}.flowers{font-size:46px;line-height:40px;opacity:.65}
+.progress-section{margin-top:18px}.line-title,.section-title{display:flex;justify-content:space-between;align-items:center}.line-title{font-size:10px}.line-title strong{font-size:11px}.progress{height:7px;background:#f2e8e8;border-radius:8px;margin-top:7px}.progress span{display:block;width:68%;height:100%;background:#ed4b81;border-radius:8px}
+.tasks{margin-top:22px}.section-title{font-size:11px;margin-bottom:5px}.section-title a{color:#dc3d70;text-decoration:none;font-size:10px}.task{height:40px;border-bottom:1px solid #f1e9e9;display:flex;align-items:center;gap:10px;font-size:10px}.circle,.empty{width:12px;height:12px;border:1px solid #e9d6d8;border-radius:50%;flex:none}.circle.pink{border-color:#f3b7c9}.circle.gold{border-color:#efcf9d}.task .empty{margin-left:auto}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}.stats article{position:relative;border:1px solid #f0e1e1;border-radius:10px;padding:11px 9px;height:63px;box-shadow:0 3px 12px rgba(100,50,60,.05)}.stats small,.stats span{display:block;font-size:8px;color:#555}.stats strong{display:block;font-size:12px;margin:5px 0 1px}.stats b{position:absolute;right:10px;top:22px;color:#ed4b81;font-size:22px;font-weight:400}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,430px);height:64px;background:#fff;border-top:1px solid #f0e5e5;display:flex;justify-content:space-around;padding-top:8px}.bottom-nav a{width:20%;text-align:center;text-decoration:none;color:#9a8e91;font-size:8px}.bottom-nav i{display:block;font-style:normal;font-size:17px;line-height:24px}.bottom-nav .active{color:#ed3f78}.bottom-nav span{display:block}
+</style>
