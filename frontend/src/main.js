@@ -13,6 +13,7 @@ import Prestataires from "./views/Prestataires.vue";
 import Alertes from "./views/Alertes.vue";
 import IA from "./views/IA.vue";
 import Nav from "./components/Nav.vue";
+import "./views/screen.css";
 
 const router=createRouter({history:createWebHistory(),routes:[
 {path:"/",component:App},{path:"/connexion",component:Connexion},{path:"/inscription",component:Inscription},
