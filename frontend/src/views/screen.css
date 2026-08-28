@@ -1,1 +1,16 @@
-*{box-sizing:border-box}.screen{min-height:100vh;width:min(100%,430px);margin:auto;background:#fff;padding:16px 14px 78px;font-family:Arial,sans-serif;color:#292325;border:1px solid #efd5d7;border-radius:20px;box-shadow:0 5px 25px rgba(80,40,45,.08)}header{height:34px;display:flex;align-items:center;justify-content:space-between;font-size:12px}header a{font-size:25px;color:#222;text-decoration:none}.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,430px);height:60px;background:#fff;border-top:1px solid #f0e5e5;display:flex;justify-content:space-around;padding-top:7px;z-index:5}.bottom a{text-align:center;text-decoration:none;color:#9a8e91;font-size:16px;width:20%}.bottom small{display:block;font-size:7px;margin-top:3px}.bottom a.router-link-active{color:#ed3f78}
+*{box-sizing:border-box}
+:root{--pink:#ed3f78;--pink-dark:#c92f61;--rose:#fff4f6;--line:#eee1e3;--text:#262124;--muted:#8d8184}
+html,body,#app{margin:0;min-height:100%;background:#fff3f5}
+body{font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+.screen{min-height:100vh;width:min(100%,430px);margin:auto;background:#fff;padding:15px 14px 76px;border:1px solid #efd5d7;border-radius:20px;box-shadow:0 5px 25px rgba(80,40,45,.08);position:relative;overflow:hidden}
+header{height:34px;display:flex;align-items:center;justify-content:space-between;font-size:12px}
+header a{font-size:25px;line-height:1;color:#222;text-decoration:none}
+header b{font-size:12px}
+header button,.add{border:0;background:var(--pink);color:#fff;border-radius:50%;width:20px;height:20px;padding:0;font-size:16px;line-height:20px}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,430px);height:60px;background:#fff;border-top:1px solid #f0e5e5;display:flex;justify-content:space-around;padding-top:7px;z-index:20}
+.bottom a{text-align:center;text-decoration:none;color:#9a8e91;font-size:16px;width:20%}
+.bottom small{display:block;font-size:7px;margin-top:3px}
+.bottom a.router-link-active{color:var(--pink)}
+.search{width:100%;height:35px;border:1px solid #eadfe0;border-radius:8px;padding:0 10px;font-size:9px;outline:none;background:#fff}
+.pill{border:1px solid #eadfe0;background:#fff;border-radius:8px;padding:6px 9px;font-size:8px}
+.pill.active{color:var(--pink);border-color:#e97899}
