@@ -1,106 +1,25 @@
 <template>
-  <main class="screen">
+  <main class="screen login-screen">
     <section class="login-card">
       <div class="brand">
         <div class="ring-mark">♧</div>
         <div class="logo">Wedding<span>+</span></div>
       </div>
-
       <h1>Bienvenue sur Wedding+</h1>
       <p class="subtitle">Organisez le mariage de vos rêves<br>en toute sérénité.</p>
-
-      <div class="tabs">
-        <button class="tab active">Se connecter</button>
-        <RouterLink to="/inscription" class="tab">Créer un compte</RouterLink>
-      </div>
-
+      <div class="tabs"><button class="tab active">Se connecter</button><RouterLink to="/inscription" class="tab">Créer un compte</RouterLink></div>
       <form @submit.prevent="$router.push('/dashboard')">
-        <input type="email" placeholder="Adresse e-mail" aria-label="Adresse e-mail">
-        <div class="password">
-          <input type="password" placeholder="Mot de passe" aria-label="Mot de passe">
-          <span>◉</span>
-        </div>
+        <input type="email" placeholder="Adresse e-mail">
+        <div class="password"><input type="password" placeholder="Mot de passe"><span>◉</span></div>
         <a href="#" class="forgot">Mot de passe oublié ?</a>
         <button class="primary">Se connecter</button>
       </form>
-
       <div class="separator"><span>ou continuer avec</span></div>
-
       <button class="google"><b>G</b> Continuer avec Google</button>
-
       <RouterLink to="/inscription" class="create">Créer un compte</RouterLink>
     </section>
   </main>
 </template>
-
 <style scoped>
-*{box-sizing:border-box}
-.screen{
-  min-height:100vh;
-  display:grid;
-  place-items:center;
-  padding:18px;
-  background:#fff5f6;
-  font-family:Arial,sans-serif;
-  color:#171214;
-}
-.login-card{
-  width:min(100%,360px);
-  min-height:610px;
-  display:flex;
-  flex-direction:column;
-  background:#fff;
-  border:1px solid #ead0d1;
-  border-radius:22px;
-  padding:34px 16px 24px;
-  box-shadow:0 10px 35px rgba(112,47,61,.10);
-}
-.brand{text-align:center;margin-bottom:12px}
-.ring-mark{
-  width:34px;height:24px;margin:0 auto -5px;
-  color:#bd7a2d;font-size:27px;line-height:24px;
-  transform:rotate(180deg);
-}
-.logo{
-  text-align:center;
-  font:34px Georgia,serif;
-  color:#c52b62;
-  margin:0;
-}
-.logo span{color:#bd7a2d}
-h1{text-align:center;font-size:14px;margin:4px 0 6px}
-.subtitle{text-align:center;font-size:10px;line-height:1.45;color:#51494b;margin:0 0 22px}
-.tabs{display:flex;border-bottom:1px solid #f1d9de;margin-bottom:14px}
-.tab{
-  flex:1;text-align:center;padding:9px 0;font-size:10px;
-  color:#777;text-decoration:none;background:none;border:0;
-}
-.tab.active{color:#dc2766;border-bottom:2px solid #ef4a82}
-input{
-  width:100%;height:36px;border:1px solid #eadcdf;border-radius:8px;
-  padding:0 12px;font-size:10px;outline:none;background:#fff;margin-bottom:9px;
-}
-.password{position:relative}
-.password input{margin-bottom:0}
-.password span{position:absolute;right:12px;top:11px;font-size:10px;color:#999}
-.forgot{
-  display:block;text-align:right;color:#df326b;font-size:9px;
-  text-decoration:none;margin:11px 0 16px
-}
-.primary,.google{
-  width:100%;height:36px;border-radius:8px;font-size:10px;cursor:pointer
-}
-.primary{border:0;background:#ea3d75;color:#fff;font-weight:700}
-.separator{
-  display:flex;align-items:center;gap:8px;margin:17px 0 10px;
-  color:#aaa;font-size:9px
-}
-.separator:before,.separator:after{content:'';height:1px;background:#eee;flex:1}
-.google{border:1px solid #eadcdf;background:#fff;color:#333}
-.google b{color:#4285f4;margin-right:8px;font-size:14px}
-.create{display:block;text-align:center;margin-top:22px;color:#df326b;font-size:10px;text-decoration:none}
-@media(max-width:599px){
-  .screen{padding:10px}
-  .login-card{min-height:calc(100vh - 20px)}
-}
+.login-screen{padding:12px 10px 10px;background:#fff}.login-card{height:100%;display:flex;flex-direction:column;padding:20px 2px 6px;background:#fff}.brand{text-align:center;margin-bottom:8px}.ring-mark{height:15px;color:#d49a45;font-size:19px;line-height:15px;transform:rotate(180deg)}.logo{font:27px Georgia,serif;color:#c32f61;line-height:1}.logo span{color:#d49a45}h1{text-align:center;font-size:10px;margin:10px 0 4px}.subtitle{text-align:center;font-size:7px;line-height:1.35;margin:0 0 14px}.tabs{display:flex;border-bottom:1px solid #f2dce1;margin-bottom:11px}.tab{flex:1;text-align:center;padding:8px 0;font-size:7px;color:#777;text-decoration:none;background:none;border:0}.tab.active{color:#df2e68;border-bottom:2px solid #ef4a80}input{width:100%;height:31px;border:1px solid #eadcdf;border-radius:7px;padding:0 9px;font-size:7px;background:#fff;margin-bottom:8px}.password{position:relative}.password input{margin-bottom:0}.password span{position:absolute;right:9px;top:10px;color:#999;font-size:7px}.forgot{display:block;text-align:right;color:#df326b;font-size:6.5px;text-decoration:none;margin:8px 0 11px}.primary,.google{width:100%;height:30px;border-radius:6px;font-size:7px}.primary{border:0;background:linear-gradient(90deg,#ed4077,#ec3f77);color:#fff}.separator{display:flex;align-items:center;gap:7px;margin:11px 0 8px;color:#aaa;font-size:6px}.separator:before,.separator:after{content:'';height:1px;background:#eee;flex:1}.google{border:1px solid #eadcdf;background:#fff;color:#333}.google b{color:#4285f4;margin-right:7px;font-size:11px}.create{display:block;text-align:center;margin-top:14px;color:#df326b;font-size:6.5px;text-decoration:none}
 </style>
