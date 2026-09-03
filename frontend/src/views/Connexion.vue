@@ -1,20 +1,38 @@
 <template>
-  <main class="screen login-screen">
-    <section class="login-card">
-      <div class="brand"><div class="ring-mark">♧</div><div class="logo">Wedding<span>+</span></div></div>
-      <h1>Bienvenue sur Wedding+</h1>
-      <p class="subtitle">Organisez le mariage de vos rêves<br>en toute sérénité.</p>
-      <div class="tabs"><button class="tab active">Se connecter</button><RouterLink to="/inscription" class="tab">Créer un compte</RouterLink></div>
-      <form @submit.prevent="submit">
-        <input v-model="email" type="email" placeholder="Adresse e-mail" required>
-        <div class="password"><input v-model="password" type="password" placeholder="Mot de passe" required><span>◉</span></div>
-        <p v-if="error" class="error">{{ error }}</p>
-        <a href="#" class="forgot">Mot de passe oublié ?</a>
-        <button class="primary" :disabled="loading">{{ loading ? 'Connexion…' : 'Se connecter' }}</button>
-      </form>
-      <div class="separator"><span>ou continuer avec</span></div>
-      <button class="google" type="button"><b>G</b> Continuer avec Google</button>
-      <RouterLink to="/inscription" class="create">Créer un compte</RouterLink>
+  <main class="auth-page">
+    <section class="visual-panel">
+      <div class="brand-lockup"><div class="brand-mark">W<span>+</span></div><div><b>WEDDING+</b><small>ORGANISEZ · PLANIFIEZ · VIVEZ</small></div></div>
+      <div class="visual-copy">
+        <span class="kicker">VOTRE MARIAGE, EN TOUTE SÉRÉNITÉ</span>
+        <h1>Chaque détail compte.<br><em>Wedding+</em> les rassemble.</h1>
+        <p>Budget, invités, prestataires, planning et Jour J réunis dans un seul espace élégant.</p>
+      </div>
+      <div class="rings" aria-hidden="true"><i></i><i></i><b>✦</b></div>
+      <div class="quote">« Une organisation plus simple pour profiter pleinement de l'essentiel. »</div>
+    </section>
+
+    <section class="form-panel">
+      <div class="mobile-brand"><div class="brand-mark">W<span>+</span></div><b>WEDDING+</b></div>
+      <div class="auth-card">
+        <span class="eyebrow">HEUREUSE DE VOUS REVOIR</span>
+        <h2>Bienvenue sur Wedding+</h2>
+        <p class="subtitle">Connectez-vous pour retrouver l'organisation de votre mariage.</p>
+
+        <div class="tabs"><button class="active">Se connecter</button><RouterLink to="/inscription">Créer un compte</RouterLink></div>
+
+        <form @submit.prevent="submit">
+          <label>Adresse e-mail<input v-model="email" type="email" placeholder="glorie@email.com" required></label>
+          <label>Mot de passe<div class="password"><input v-model="password" :type="showPassword?'text':'password'" placeholder="Votre mot de passe" required><button type="button" @click="showPassword=!showPassword">{{showPassword?'Masquer':'Afficher'}}</button></div></label>
+          <div class="helper"><label class="remember"><input type="checkbox"> <span>Se souvenir de moi</span></label><a href="#" @click.prevent="error='En mode démo, utilisez simplement vos identifiants.'">Mot de passe oublié ?</a></div>
+          <p v-if="error" class="error">{{ error }}</p>
+          <button class="primary" :disabled="loading">{{ loading ? 'Connexion…' : 'Se connecter' }} <span>→</span></button>
+        </form>
+
+        <div class="separator"><span>ou</span></div>
+        <button class="google" type="button" @click="googleDemo"><b>G</b> Continuer avec Google</button>
+        <p class="bottom-link">Pas encore de compte ? <RouterLink to="/inscription">Créer un compte</RouterLink></p>
+      </div>
+      <small class="demo-note">Mode démonstration · Les données sont enregistrées localement</small>
     </section>
   </main>
 </template>
@@ -23,28 +41,13 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authApi, setSession } from '../services/api.js'
-
-const router = useRouter()
-const email = ref('')
-const password = ref('')
-const error = ref('')
-const loading = ref(false)
-
-async function submit() {
-  error.value = ''
-  loading.value = true
-  try {
-    const response = await authApi.login(email.value, password.value)
-    setSession(response.data)
-    router.push('/dashboard')
-  } catch (err) {
-    error.value = err.message
-  } finally {
-    loading.value = false
-  }
-}
+const router=useRouter(),email=ref('demo@weddingplus.fr'),password=ref('weddingplus'),error=ref(''),loading=ref(false),showPassword=ref(false)
+async function connect(mail,pass){error.value='';loading.value=true;try{const response=await authApi.login(mail,pass);setSession(response.data);router.push('/dashboard')}catch(err){error.value=err.message}finally{loading.value=false}}
+function submit(){connect(email.value,password.value)}
+function googleDemo(){connect('google.demo@weddingplus.fr','demo-google')}
 </script>
 
 <style scoped>
-.login-screen{padding:12px 10px 10px;background:#fff}.login-card{height:100%;display:flex;flex-direction:column;padding:20px 2px 6px;background:#fff}.brand{text-align:center;margin-bottom:8px}.ring-mark{height:15px;color:#d49a45;font-size:19px;line-height:15px;transform:rotate(180deg)}.logo{font:27px Georgia,serif;color:#c32f61;line-height:1}.logo span{color:#d49a45}h1{text-align:center;font-size:10px;margin:10px 0 4px}.subtitle{text-align:center;font-size:7px;line-height:1.35;margin:0 0 14px}.tabs{display:flex;border-bottom:1px solid #f2dce1;margin-bottom:11px}.tab{flex:1;text-align:center;padding:8px 0;font-size:7px;color:#777;text-decoration:none;background:none;border:0}.tab.active{color:#df2e68;border-bottom:2px solid #ef4a80}input{width:100%;height:31px;border:1px solid #eadcdf;border-radius:7px;padding:0 9px;font-size:7px;background:#fff;margin-bottom:8px}.password{position:relative}.password input{margin-bottom:0}.password span{position:absolute;right:9px;top:10px;color:#999;font-size:7px}.forgot{display:block;text-align:right;color:#df326b;font-size:6.5px;text-decoration:none;margin:8px 0 11px}.primary,.google{width:100%;height:30px;border-radius:6px;font-size:7px}.primary{border:0;background:linear-gradient(90deg,#ed4077,#ec3f77);color:#fff}.primary:disabled{opacity:.65}.error{color:#b42318;font-size:6.5px;margin:7px 0 0}.separator{display:flex;align-items:center;gap:7px;margin:11px 0 8px;color:#aaa;font-size:6px}.separator:before,.separator:after{content:'';height:1px;background:#eee;flex:1}.google{border:1px solid #eadcdf;background:#fff;color:#333}.google b{color:#4285f4;margin-right:7px;font-size:11px}.create{display:block;text-align:center;margin-top:14px;color:#df326b;font-size:6.5px;text-decoration:none}
+.auth-page{min-height:100vh;display:grid;grid-template-columns:minmax(420px,1.05fr) minmax(480px,.95fr);background:#fff}.visual-panel{position:relative;overflow:hidden;padding:54px 64px;display:flex;flex-direction:column;color:#39272e;background:radial-gradient(circle at 85% 18%,rgba(215,163,78,.17),transparent 26%),radial-gradient(circle at 8% 78%,rgba(211,50,105,.13),transparent 32%),linear-gradient(145deg,#fff8fa,#fff3f5 52%,#fffaf0)}.brand-lockup{display:flex;align-items:center;gap:14px;z-index:2}.brand-lockup>div:last-child{display:grid;gap:4px}.brand-lockup b{font:700 15px Georgia,serif;letter-spacing:.17em;color:#bd255b}.brand-lockup small{font-size:9px;letter-spacing:.14em;color:#aa8350}.brand-mark{width:56px;height:56px;border-radius:18px;background:rgba(255,255,255,.86);border:1px solid rgba(207,108,139,.25);display:grid;place-items:center;font:italic 32px Georgia,serif;color:#ca2860;box-shadow:0 12px 30px rgba(142,66,94,.1)}.brand-mark span{color:#c28a3d;font:700 18px Arial;margin-left:1px}.visual-copy{max-width:650px;margin:auto 0;z-index:2}.kicker,.eyebrow{font-size:10px;font-weight:800;letter-spacing:.18em;color:#bd8950}.visual-copy h1{font:500 clamp(38px,4vw,68px)/1.08 Georgia,serif;margin:16px 0 20px}.visual-copy h1 em{font-weight:500;color:#c6235e}.visual-copy p{max-width:520px;font-size:15px;line-height:1.8;color:#806a73}.rings{position:absolute;width:430px;height:360px;right:-80px;bottom:80px;opacity:.18}.rings i{position:absolute;width:210px;height:210px;border:14px solid #b47b2e;border-radius:50%;bottom:10px}.rings i:first-child{left:20px}.rings i:nth-child(2){left:150px;bottom:48px}.rings b{position:absolute;right:68px;top:30px;color:#b47b2e;font-size:72px}.quote{z-index:2;font:italic 14px Georgia,serif;color:#8f6976}.form-panel{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:48px 7vw;background:#fff}.auth-card{width:min(100%,500px)}.auth-card h2{font:500 36px Georgia,serif;margin:9px 0 9px;color:#35262c}.subtitle{color:#8a7880;font-size:14px;line-height:1.6;margin:0 0 28px}.tabs{display:grid;grid-template-columns:1fr 1fr;background:#fff7fa;border:1px solid #f0dce3;padding:5px;border-radius:15px;margin-bottom:24px}.tabs>*{text-decoration:none;text-align:center;padding:11px;border:0;border-radius:11px;background:transparent;color:#8c7880;font-size:12px;font-weight:700}.tabs .active{background:#fff;color:#c5225e;box-shadow:0 5px 15px rgba(116,57,78,.08)}form{display:grid;gap:16px}label{display:grid;gap:8px;font-size:12px;font-weight:700;color:#58474e}input{width:100%;height:52px;border:1px solid #e9dce1;border-radius:14px;padding:0 15px;background:#fff;font-size:14px;outline:none;transition:.2s}input:focus{border-color:#d54b7d;box-shadow:0 0 0 4px rgba(213,75,125,.08)}.password{position:relative}.password button{position:absolute;right:10px;top:10px;height:32px;border:0;background:transparent;color:#bf2b61;font-size:11px;font-weight:700}.password input{padding-right:75px}.helper{display:flex;justify-content:space-between;align-items:center;font-size:11px}.helper a,.bottom-link a{color:#c5235e;text-decoration:none;font-weight:800}.remember{display:flex;grid-template-columns:auto 1fr;align-items:center;gap:6px;font-weight:500}.remember input{width:15px;height:15px}.primary{height:54px;border:0;border-radius:15px;background:linear-gradient(100deg,#e8477d,#c81f5e);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 12px 26px rgba(200,31,94,.2)}.primary span{font-size:19px}.primary:disabled{opacity:.6}.error{margin:0;padding:10px 12px;border-radius:11px;background:#fff1f4;color:#a62550;font-size:11px}.separator{display:flex;align-items:center;gap:12px;margin:22px 0;color:#ad9ca3;font-size:11px}.separator:before,.separator:after{content:'';height:1px;background:#eee2e6;flex:1}.google{width:100%;height:52px;border:1px solid #e9dce1;border-radius:14px;background:#fff;color:#42343a;font-weight:700}.google b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;margin-right:8px;color:#4285f4;background:#f6f8ff}.bottom-link{text-align:center;font-size:12px;color:#88767d;margin-top:22px}.demo-note{margin-top:34px;color:#b6a7ad;font-size:10px}.mobile-brand{display:none}
+@media(max-width:900px){.auth-page{grid-template-columns:1fr}.visual-panel{display:none}.form-panel{min-height:100vh;padding:32px 22px}.mobile-brand{display:flex;align-items:center;gap:10px;margin-bottom:32px}.mobile-brand .brand-mark{width:48px;height:48px}.mobile-brand b{font:700 14px Georgia,serif;letter-spacing:.15em;color:#bd255b}.auth-card h2{font-size:31px}}
 </style>
