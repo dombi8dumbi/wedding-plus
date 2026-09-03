@@ -27,4 +27,13 @@ const router=createRouter({history:createWebHistory(),routes:[
 {path:"/:pathMatch(.*)*",redirect:"/"}
 ]});
 
+router.beforeEach((to)=>{
+  if(to.path!=="/dashboard") return true;
+  try{
+    const user=JSON.parse(localStorage.getItem("weddingPlusUser")||"null");
+    if(user && !(user.weddings||[]).length) return "/onboarding";
+  }catch{}
+  return true;
+});
+
 createApp(App).component("Nav",Nav).use(router).mount("#app");
