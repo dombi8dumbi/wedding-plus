@@ -1,7 +1,7 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-const envFlag = import.meta.env.VITE_USE_REAL_API;
 const isLocalhost = typeof window !== "undefined" && ["localhost", "127.0.0.1"].includes(window.location.hostname);
-const USE_REAL_API = envFlag === "true" || (envFlag !== "false" && isLocalhost);
+const API_URL = import.meta.env.VITE_API_URL || (isLocalhost ? "http://localhost:5000/api" : "/api");
+const envFlag = import.meta.env.VITE_USE_REAL_API;
+const USE_REAL_API = envFlag !== "false";
 
 function uid(prefix){ return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2,8)}` }
 function getToken(){ return localStorage.getItem("weddingPlusToken") }
@@ -118,4 +118,10 @@ export async function api(path,options={}){
 export const authApi={login:(email,password)=>api("/auth/login",{method:"POST",body:JSON.stringify({email,password})}),register:(name,email,password)=>api("/auth/register",{method:"POST",body:JSON.stringify({name,email,password})}),me:()=>api("/auth/me")};
 export const onboardingApi={create:data=>api("/onboarding",{method:"POST",body:JSON.stringify(data)})};
 export const weddingApi={dashboard:id=>api(`/dashboard/${id}`),list:(id=getWeddingId())=>api(`/weddings${id?`?wedding=${id}`:""}`),create:data=>api("/weddings",{method:"POST",body:JSON.stringify(data)})};
+export const invitationApi={
+  send:guestId=>api(`/invitations/${guestId}/send`,{method:"POST"}),
+  get:token=>api(`/invitations/respond/${token}`),
+  respond:(token,status,reason="")=>api(`/invitations/respond/${token}`,{method:"POST",body:JSON.stringify({status,reason})}),
+  runReminders:()=>api("/invitations/reminders/run",{method:"POST"})
+};
 export function crudApi(resource){return {list:wedding=>api(`/${resource}${wedding?`?wedding=${wedding}`:""}`),create:data=>api(`/${resource}`,{method:"POST",body:JSON.stringify(data)}),update:(id,data)=>api(`/${resource}/${id}`,{method:"PUT",body:JSON.stringify(data)}),remove:id=>api(`/${resource}/${id}`,{method:"DELETE"})}}
