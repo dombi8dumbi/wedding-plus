@@ -6,10 +6,12 @@ import Vendor from "../models/Vendor.js";
 import BudgetItem from "../models/BudgetItem.js";
 import TimelineItem from "../models/TimelineItem.js";
 import Alert from "../models/Alert.js";
+import authRouter from "./auth.js";
 import { createCrudRouter } from "./crudFactory.js";
 
 const router = Router();
 
+router.use("/auth", authRouter);
 router.use("/weddings", createCrudRouter(Wedding, { filterField: "status" }));
 router.use("/tasks", createCrudRouter(Task));
 router.use("/guests", createCrudRouter(Guest));
