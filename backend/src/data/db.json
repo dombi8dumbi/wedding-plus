@@ -1,0 +1,50 @@
+{
+  "users": [],
+  "weddings": [
+    {
+      "_id": "demo-wedding",
+      "title": "Notre mariage",
+      "partner1": "Glorie",
+      "partner2": "Jordan",
+      "date": "2027-06-12T14:00:00.000Z",
+      "location": "Domaine de la Roseraie, Paris",
+      "budgetTarget": 20000,
+      "guestTarget": 150,
+      "status": "planning"
+    }
+  ],
+  "tasks": [
+    {"_id":"task-1","wedding":"demo-wedding","title":"Confirmer le traiteur","dueDate":"2026-09-18","priority":"high","status":"todo"},
+    {"_id":"task-2","wedding":"demo-wedding","title":"Envoyer les invitations","dueDate":"2026-09-25","priority":"high","status":"in-progress"},
+    {"_id":"task-3","wedding":"demo-wedding","title":"Essai coiffure","dueDate":"2026-10-02","priority":"medium","status":"todo"},
+    {"_id":"task-4","wedding":"demo-wedding","title":"Réserver le photographe","dueDate":"2026-10-12","priority":"medium","status":"done"}
+  ],
+  "guests": [
+    {"_id":"guest-1","wedding":"demo-wedding","firstName":"Aïcha","lastName":"Diop","group":"Famille","rsvp":"confirmed","tableName":"Élégance"},
+    {"_id":"guest-2","wedding":"demo-wedding","firstName":"Samuel","lastName":"Kouassi","group":"Amis","rsvp":"pending","tableName":""},
+    {"_id":"guest-3","wedding":"demo-wedding","firstName":"Marie","lastName":"Lemoine","group":"Amis","rsvp":"confirmed","tableName":"Harmonie"},
+    {"_id":"guest-4","wedding":"demo-wedding","firstName":"Jean","lastName":"Dupont","group":"Collègues","rsvp":"declined","tableName":""}
+  ],
+  "vendors": [
+    {"_id":"vendor-1","wedding":"demo-wedding","name":"Traiteur Délice","category":"Traiteur","price":3200,"status":"booked"},
+    {"_id":"vendor-2","wedding":"demo-wedding","name":"Fleurs d'Eden","category":"Décoration","price":1800,"status":"booked"},
+    {"_id":"vendor-3","wedding":"demo-wedding","name":"Studio Lumière","category":"Photo & Vidéo","price":1200,"status":"paid"},
+    {"_id":"vendor-4","wedding":"demo-wedding","name":"DJ Harmony","category":"Animation","price":900,"status":"contacted"}
+  ],
+  "budget": [
+    {"_id":"budget-1","wedding":"demo-wedding","label":"Location du domaine","category":"Lieu","estimated":6000,"actual":4000,"paid":true},
+    {"_id":"budget-2","wedding":"demo-wedding","label":"Menu réception","category":"Traiteur","estimated":5000,"actual":3200},
+    {"_id":"budget-3","wedding":"demo-wedding","label":"Tenues","category":"Tenues","estimated":3000,"actual":2000},
+    {"_id":"budget-4","wedding":"demo-wedding","label":"Fleurs et décoration","category":"Décoration","estimated":2500,"actual":1500},
+    {"_id":"budget-5","wedding":"demo-wedding","label":"Photo & vidéo","category":"Photo & Vidéo","estimated":1500,"actual":750}
+  ],
+  "timeline": [
+    {"_id":"timeline-1","wedding":"demo-wedding","title":"Préparatifs","startTime":"2027-06-12T08:00:00.000Z","responsible":"Wedding planner","status":"planned"},
+    {"_id":"timeline-2","wedding":"demo-wedding","title":"Cérémonie","startTime":"2027-06-12T14:00:00.000Z","location":"Domaine de la Roseraie","status":"planned"},
+    {"_id":"timeline-3","wedding":"demo-wedding","title":"Cocktail","startTime":"2027-06-12T16:00:00.000Z","location":"Jardin","status":"planned"},
+    {"_id":"timeline-4","wedding":"demo-wedding","title":"Dîner & soirée","startTime":"2027-06-12T19:00:00.000Z","location":"Grande salle","status":"planned"}
+  ],
+  "alerts": [
+    {"_id":"alert-1","wedding":"demo-wedding","type":"warning","title":"Traiteur à confirmer","message":"Pensez à confirmer le nombre final de menus.","read":false}
+  ]
+}
