@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import { requireAuth } from "../middleware/auth.js";
+import { ensureDemoWedding } from "../services/demoWedding.js";
 
 const router = Router();
 
@@ -21,6 +22,8 @@ router.post("/register", async (req, res, next) => {
 
     const passwordHash = await bcrypt.hash(password, 12);
     const user = await User.create({ name, email, passwordHash });
+    await ensureDemoWedding(user);
+    await user.populate("weddings");
     const token = signToken(user);
     res.status(201).json({ success: true, data: { user, token } });
   } catch (error) { next(error); }
@@ -33,14 +36,19 @@ router.post("/login", async (req, res, next) => {
     if (!user || !(await bcrypt.compare(password || "", user.passwordHash))) {
       return res.status(401).json({ success: false, message: "Email ou mot de passe incorrect" });
     }
+    await ensureDemoWedding(user);
+    await user.populate("weddings");
     const token = signToken(user);
     res.json({ success: true, data: { user, token } });
   } catch (error) { next(error); }
 });
 
-router.get("/me", requireAuth, async (req, res) => {
-  await req.user.populate("weddings");
-  res.json({ success: true, data: req.user });
+router.get("/me", requireAuth, async (req, res, next) => {
+  try {
+    await ensureDemoWedding(req.user);
+    await req.user.populate("weddings");
+    res.json({ success: true, data: req.user });
+  } catch (error) { next(error); }
 });
 
 export default router;
