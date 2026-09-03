@@ -13,6 +13,7 @@ import PlanTable from "./views/PlanTable.vue";
 import Prestataires from "./views/Prestataires.vue";
 import Alertes from "./views/Alertes.vue";
 import IA from "./views/IA.vue";
+import Parametres from "./views/Parametres.vue";
 import Nav from "./components/Nav.vue";
 import "./views/screen.css";
 
@@ -21,6 +22,7 @@ const router=createRouter({history:createWebHistory(),routes:[
 {path:"/dashboard",component:Dashboard},{path:"/mariage",component:Mariage},{path:"/tasks",component:Tasks},
 {path:"/budget",component:Budget},{path:"/invites",component:Invites},{path:"/plan-table",component:PlanTable},
 {path:"/prestataires",component:Prestataires},{path:"/alertes",component:Alertes},{path:"/ia",component:IA},
+{path:"/parametres",component:Parametres},
 {path:"/:pathMatch(.*)*",redirect:"/"}
 ]});
 
