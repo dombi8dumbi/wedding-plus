@@ -25,7 +25,7 @@ function tokenFor(user) {
 }
 function safeUser(user, db) {
   const { passwordHash, ...clean } = user;
-  return { ...clean, weddings: db.weddings.filter(w => w.owner === user._id || w._id === user.weddingId || w._id === "demo-wedding") };
+  return { ...clean, weddings: db.weddings.filter(w => w.owner === user._id || (user.weddingId && w._id === user.weddingId)) };
 }
 function auth(req, res, next) {
   const raw = req.headers.authorization || "";
@@ -38,6 +38,15 @@ function auth(req, res, next) {
     res.status(401).json({ success: false, message: "Session invalide ou expirée" });
   }
 }
+function dateBefore(weddingDate, days) {
+  const d = new Date(weddingDate);
+  d.setDate(d.getDate() - days);
+  return d.toISOString().slice(0, 10);
+}
+function amount(value, fallback) {
+  const n = Number(value);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+}
 
 router.post("/auth/register", async (req, res, next) => {
   try {
@@ -45,10 +54,10 @@ router.post("/auth/register", async (req, res, next) => {
     if (!name || !email || !password) return res.status(400).json({ success:false, message:"Nom, e-mail et mot de passe requis" });
     const db = readDB();
     if (db.users.some(u => u.email.toLowerCase() === email.toLowerCase())) return res.status(409).json({ success:false, message:"Un compte existe déjà avec cet e-mail" });
-    const user = {_id:id("user"), name, email:email.toLowerCase(), passwordHash:await bcrypt.hash(password,10), role:"user", weddingId:"demo-wedding", createdAt:new Date().toISOString()};
+    const user = {_id:id("user"), name, email:email.toLowerCase(), passwordHash:await bcrypt.hash(password,10), role:"user", weddingId:null, onboardingCompleted:false, createdAt:new Date().toISOString()};
     db.users.push(user);
     writeDB(db);
-    res.status(201).json({ success:true, data:{ user:safeUser(user,db), token:tokenFor(user) } });
+    res.status(201).json({ success:true, data:{ user:safeUser(user,db), token:tokenFor(user), needsOnboarding:true } });
   } catch (error) { next(error); }
 });
 
@@ -58,7 +67,8 @@ router.post("/auth/login", async (req, res, next) => {
     const db = readDB();
     const user = db.users.find(u => u.email.toLowerCase() === String(email||"").toLowerCase());
     if (!user || !(await bcrypt.compare(String(password||""), user.passwordHash))) return res.status(401).json({ success:false, message:"E-mail ou mot de passe incorrect" });
-    res.json({ success:true, data:{ user:safeUser(user,db), token:tokenFor(user) } });
+    const clean = safeUser(user,db);
+    res.json({ success:true, data:{ user:clean, token:tokenFor(user), needsOnboarding:!user.weddingId || !clean.weddings.length } });
   } catch (error) { next(error); }
 });
 
@@ -67,6 +77,77 @@ router.get("/auth/me", auth, (req, res) => {
   const user = db.users.find(u => u._id === req.auth.id);
   if (!user) return res.status(404).json({ success:false, message:"Utilisateur introuvable" });
   res.json({ success:true, data:safeUser(user,db) });
+});
+
+router.post("/onboarding", auth, (req, res) => {
+  const db = readDB();
+  const user = db.users.find(u => u._id === req.auth.id);
+  if (!user) return res.status(404).json({ success:false, message:"Utilisateur introuvable" });
+  if (user.weddingId && db.weddings.some(w => w._id === user.weddingId)) {
+    return res.status(409).json({ success:false, message:"Votre mariage est déjà configuré" });
+  }
+
+  const { partner1, partner2, date, location, budgetTarget, guestTarget, style, priorities=[] } = req.body;
+  if (!partner1 || !partner2 || !date) return res.status(400).json({ success:false, message:"Prénoms des partenaires et date du mariage requis" });
+
+  const weddingId = id("wedding");
+  const targetBudget = amount(budgetTarget, 15000);
+  const guests = amount(guestTarget, 100);
+  const wedding = {
+    _id:weddingId,
+    owner:user._id,
+    title:`Mariage de ${partner1} & ${partner2}`,
+    partner1,
+    partner2,
+    date:`${date}T14:00:00.000Z`,
+    location:location || "À confirmer",
+    budgetTarget:targetBudget,
+    guestTarget:guests,
+    style:style || "Élégant",
+    priorities:Array.isArray(priorities)?priorities:[],
+    status:"planning",
+    createdAt:new Date().toISOString()
+  };
+
+  db.weddings.unshift(wedding);
+  user.weddingId = weddingId;
+  user.onboardingCompleted = true;
+
+  const taskSuggestions = [
+    ["Définir la liste prévisionnelle des invités", 210, "high"],
+    ["Rechercher et comparer les lieux de réception", 180, "high"],
+    ["Établir la première version du budget", 170, "high"],
+    ["Sélectionner le traiteur", 120, "medium"],
+    ["Choisir photographe et vidéaste", 100, "medium"],
+    ["Préparer les invitations", 75, "medium"]
+  ];
+  db.tasks = db.tasks || [];
+  taskSuggestions.forEach(([title,days,priority]) => db.tasks.push({_id:id("task"),wedding:weddingId,title,dueDate:dateBefore(wedding.date,days),priority,status:"todo",suggested:true}));
+
+  const budgetSuggestions = [
+    ["Lieu & réception","Lieu",.30],
+    ["Traiteur","Traiteur",.28],
+    ["Tenues & beauté","Tenues",.12],
+    ["Photo & vidéo","Photo & Vidéo",.10],
+    ["Décoration & fleurs","Décoration",.10],
+    ["Animation & imprévus","Animation",.10]
+  ];
+  db.budget = db.budget || [];
+  budgetSuggestions.forEach(([label,category,ratio]) => db.budget.push({_id:id("budget"),wedding:weddingId,label,category,estimated:Math.round(targetBudget*ratio),actual:0,paid:false,suggested:true}));
+
+  db.timeline = db.timeline || [];
+  db.timeline.push(
+    {_id:id("timeline"),wedding:weddingId,title:"Préparatifs",startTime:`${date}T08:00:00.000Z`,responsible:"À définir",status:"planned",suggested:true},
+    {_id:id("timeline"),wedding:weddingId,title:"Cérémonie",startTime:`${date}T14:00:00.000Z`,location:wedding.location,status:"planned",suggested:true},
+    {_id:id("timeline"),wedding:weddingId,title:"Réception",startTime:`${date}T18:00:00.000Z`,location:wedding.location,status:"planned",suggested:true}
+  );
+
+  db.alerts = db.alerts || [];
+  db.alerts.unshift({_id:id("alert"),wedding:weddingId,type:"info",title:"Votre espace est prêt",message:`Wedding+ a préparé des suggestions pour le mariage de ${partner1} & ${partner2}. Vous pouvez tout modifier.`,read:false,createdAt:new Date().toISOString()});
+
+  writeDB(db);
+  const clean = safeUser(user,db);
+  res.status(201).json({success:true,data:{wedding,user:clean,suggestions:{tasks:taskSuggestions.length,budget:budgetSuggestions.length,timeline:3}}});
 });
 
 const resources = ["weddings","tasks","guests","vendors","budget","timeline","alerts"];
@@ -111,7 +192,7 @@ for (const resource of resources) {
 
 router.get("/dashboard/:weddingId", (req, res) => {
   const db = readDB();
-  const wedding = db.weddings.find(w => w._id === req.params.weddingId) || db.weddings[0];
+  const wedding = db.weddings.find(w => w._id === req.params.weddingId);
   if (!wedding) return res.status(404).json({ success:false, message:"Mariage introuvable" });
   const filter = name => (db[name]||[]).filter(x => x.wedding === wedding._id);
   const tasks=filter("tasks"), guests=filter("guests"), vendors=filter("vendors"), budget=filter("budget"), timeline=filter("timeline"), alerts=filter("alerts");
