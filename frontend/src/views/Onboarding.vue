@@ -5,10 +5,10 @@
       <div class="intro-copy">
         <span class="kicker">CONFIGURATION PERSONNALISÉE</span>
         <h1>Parlez-nous de<br><em>votre mariage.</em></h1>
-        <p>Wedding+ utilise ces informations pour préparer un espace adapté à votre budget, votre date et vos priorités.</p>
+        <p>Wedding+ utilise ces informations pour préparer un espace adapté à votre budget, votre date, votre style et vos priorités.</p>
         <div class="promise-list">
           <div><span>01</span><p><b>Votre propre espace</b><small>Aucune donnée d'un autre couple n'est mélangée aux vôtres.</small></p></div>
-          <div><span>02</span><p><b>Suggestions intelligentes</b><small>Planning, budget et premières tâches sont proposés automatiquement.</small></p></div>
+          <div><span>02</span><p><b>Suggestions intelligentes</b><small>Planning, budget et tâches évoluent selon le style de mariage choisi.</small></p></div>
           <div><span>03</span><p><b>Vous gardez le contrôle</b><small>Toutes les suggestions restent modifiables ou supprimables.</small></p></div>
         </div>
       </div>
@@ -43,7 +43,7 @@
           </div>
         </fieldset>
 
-        <div class="generated-note"><span>✦</span><div><b>Ce que Wedding+ va préparer</b><p>6 premières tâches · 6 catégories de budget · un planning Jour J · vos premières alertes.</p></div></div>
+        <div class="generated-note"><span>✦</span><div><b>Suggestions {{ form.style }}</b><p>{{ preview }}</p></div></div>
         <p v-if="error" class="error">{{ error }}</p>
         <button class="submit" :disabled="loading">{{ loading ? 'Préparation de votre espace…' : 'Créer mon espace Wedding+' }} <span>→</span></button>
       </form>
@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getCurrentUser, onboardingApi, updateCurrentUser } from '../services/api.js'
 
@@ -69,6 +69,16 @@ const priorities=[
   {value:'photos',label:'Photos & souvenirs',icon:'□'},
   {value:'planning',label:'Organisation fluide',icon:'✓'}
 ]
+const previews={
+  'Traditionnel':'Traditions et cérémonie · tenues traditionnelles · accueil des aînés · menu traditionnel · budget culturel · déroulé adapté.',
+  'Élégant':'Palette raffinée · lieu et traiteur · décoration florale · photo & vidéo · budget équilibré · déroulé élégant.',
+  'Romantique':'Fleurs et lumières · musique de cérémonie · vœux · séance couple · cadeaux invités · ouverture de bal.',
+  'Moderne':'Identité visuelle · invitations digitales · scénographie · expérience invités · DJ · planning dynamique.',
+  'Chic & minimaliste':'Palette épurée · prestataires essentiels · décoration minimaliste · plan de table · budget concentré.',
+  'Champêtre':'Lieu extérieur · plan B météo · fleurs de saison · repas convivial · éclairage extérieur · animations.',
+  'Glamour':'Scénographie premium · tenues · photo & vidéo · éclairage · entertainment · entrée des mariés.'
+}
+const preview=computed(()=>previews[form.style]||'Wedding+ préparera des tâches, un budget et un planning adaptés à vos réponses.')
 function togglePriority(value){const i=form.priorities.indexOf(value);if(i>=0)form.priorities.splice(i,1);else if(form.priorities.length<3)form.priorities.push(value)}
 async function submit(){error.value='';loading.value=true;try{const r=await onboardingApi.create({...form});updateCurrentUser(r.data.user);router.replace('/dashboard')}catch(e){error.value=e.message}finally{loading.value=false}}
 </script>
