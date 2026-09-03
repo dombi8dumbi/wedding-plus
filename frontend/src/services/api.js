@@ -1,5 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-const USE_REAL_API = import.meta.env.VITE_USE_REAL_API === "true";
+const envFlag = import.meta.env.VITE_USE_REAL_API;
+const isLocalhost = typeof window !== "undefined" && ["localhost", "127.0.0.1"].includes(window.location.hostname);
+const USE_REAL_API = envFlag === "true" || (envFlag !== "false" && isLocalhost);
 const DEMO_WEDDING_ID = "demo-wedding";
 
 function getToken() { return localStorage.getItem("weddingPlusToken"); }
