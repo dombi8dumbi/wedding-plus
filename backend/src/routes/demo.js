@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { sendWelcomeEmail, sendLoginEmail } from "../services/mailer.js";
 
 const router = Router();
 const __filename = fileURLToPath(import.meta.url);
@@ -26,6 +27,16 @@ function tokenFor(user) {
 function safeUser(user, db) {
   const { passwordHash, ...clean } = user;
   return { ...clean, weddings: db.weddings.filter(w => w.owner === user._id || (user.weddingId && w._id === user.weddingId)) };
+}
+async function sendMailSafely(sender, payload) {
+  try {
+    const result = await sender(payload);
+    if (result?.sent) console.log(`Wedding+ email sent to ${payload.to}`);
+    return result;
+  } catch (error) {
+    console.error("Wedding+ email error:", error.message);
+    return { sent:false, reason:error.message };
+  }
 }
 function auth(req, res, next) {
   const raw = req.headers.authorization || "";
@@ -57,7 +68,8 @@ router.post("/auth/register", async (req, res, next) => {
     const user = {_id:id("user"), name, email:email.toLowerCase(), passwordHash:await bcrypt.hash(password,10), role:"user", weddingId:null, onboardingCompleted:false, createdAt:new Date().toISOString()};
     db.users.push(user);
     writeDB(db);
-    res.status(201).json({ success:true, data:{ user:safeUser(user,db), token:tokenFor(user), needsOnboarding:true } });
+    const emailResult = await sendMailSafely(sendWelcomeEmail, { to:user.email, name:user.name });
+    res.status(201).json({ success:true, data:{ user:safeUser(user,db), token:tokenFor(user), needsOnboarding:true, emailSent:Boolean(emailResult?.sent) } });
   } catch (error) { next(error); }
 });
 
@@ -68,7 +80,8 @@ router.post("/auth/login", async (req, res, next) => {
     const user = db.users.find(u => u.email.toLowerCase() === String(email||"").toLowerCase());
     if (!user || !(await bcrypt.compare(String(password||""), user.passwordHash))) return res.status(401).json({ success:false, message:"E-mail ou mot de passe incorrect" });
     const clean = safeUser(user,db);
-    res.json({ success:true, data:{ user:clean, token:tokenFor(user), needsOnboarding:!user.weddingId || !clean.weddings.length } });
+    const emailResult = await sendMailSafely(sendLoginEmail, { to:user.email, name:user.name });
+    res.json({ success:true, data:{ user:clean, token:tokenFor(user), needsOnboarding:!user.weddingId || !clean.weddings.length, emailSent:Boolean(emailResult?.sent) } });
   } catch (error) { next(error); }
 });
 
