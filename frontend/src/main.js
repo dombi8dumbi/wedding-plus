@@ -27,7 +27,10 @@ const router=createRouter({history:createWebHistory(),routes:[
 {path:"/:pathMatch(.*)*",redirect:"/"}
 ]});
 
-router.beforeEach((to)=>{
+router.beforeEach((to,from)=>{
+  // A brand-new account must always complete the wedding questionnaire first,
+  // including on the deployed frontend fallback demo mode.
+  if(to.path==="/dashboard" && from.path==="/inscription") return "/onboarding";
   if(to.path!=="/dashboard") return true;
   try{
     const user=JSON.parse(localStorage.getItem("weddingPlusUser")||"null");
