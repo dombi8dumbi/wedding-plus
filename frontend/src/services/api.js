@@ -4,6 +4,17 @@ function getToken() {
   return localStorage.getItem("weddingPlusToken");
 }
 
+export function getCurrentUser() {
+  try { return JSON.parse(localStorage.getItem("weddingPlusUser") || "null"); }
+  catch { return null; }
+}
+
+export function getWeddingId() {
+  const user = getCurrentUser();
+  const first = user?.weddings?.[0];
+  return typeof first === "string" ? first : first?._id || null;
+}
+
 export function setSession({ token, user }) {
   localStorage.setItem("weddingPlusToken", token);
   localStorage.setItem("weddingPlusUser", JSON.stringify(user));
