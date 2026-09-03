@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 import App from "./App.vue";
+import Splash from "./views/Splash.vue";
 import Connexion from "./views/Connexion.vue";
 import Inscription from "./views/Inscription.vue";
 import Dashboard from "./views/Dashboard.vue";
@@ -16,10 +17,11 @@ import Nav from "./components/Nav.vue";
 import "./views/screen.css";
 
 const router=createRouter({history:createWebHistory(),routes:[
-{path:"/connexion",component:Connexion},{path:"/inscription",component:Inscription},
+{path:"/",component:Splash},{path:"/connexion",component:Connexion},{path:"/inscription",component:Inscription},
 {path:"/dashboard",component:Dashboard},{path:"/mariage",component:Mariage},{path:"/tasks",component:Tasks},
 {path:"/budget",component:Budget},{path:"/invites",component:Invites},{path:"/plan-table",component:PlanTable},
-{path:"/prestataires",component:Prestataires},{path:"/alertes",component:Alertes},{path:"/ia",component:IA}
+{path:"/prestataires",component:Prestataires},{path:"/alertes",component:Alertes},{path:"/ia",component:IA},
+{path:"/:pathMatch(.*)*",redirect:"/"}
 ]});
 
 createApp(App).component("Nav",Nav).use(router).mount("#app");
