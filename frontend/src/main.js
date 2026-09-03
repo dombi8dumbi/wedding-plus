@@ -5,6 +5,7 @@ import Splash from "./views/Splash.vue";
 import Connexion from "./views/Connexion.vue";
 import Inscription from "./views/Inscription.vue";
 import Onboarding from "./views/Onboarding.vue";
+import InvitationResponse from "./views/InvitationResponse.vue";
 import Dashboard from "./views/Dashboard.vue";
 import Mariage from "./views/Mariage.vue";
 import Tasks from "./views/Tasks.vue";
@@ -20,6 +21,7 @@ import "./views/screen.css";
 
 const router=createRouter({history:createWebHistory(),routes:[
 {path:"/",component:Splash},{path:"/connexion",component:Connexion},{path:"/inscription",component:Inscription},{path:"/onboarding",component:Onboarding},
+{path:"/invitation/:token",component:InvitationResponse},
 {path:"/dashboard",component:Dashboard},{path:"/mariage",component:Mariage},{path:"/tasks",component:Tasks},
 {path:"/budget",component:Budget},{path:"/invites",component:Invites},{path:"/plan-table",component:PlanTable},
 {path:"/prestataires",component:Prestataires},{path:"/alertes",component:Alertes},{path:"/ia",component:IA},
@@ -28,8 +30,7 @@ const router=createRouter({history:createWebHistory(),routes:[
 ]});
 
 router.beforeEach((to,from)=>{
-  // A brand-new account must always complete the wedding questionnaire first,
-  // including on the deployed frontend fallback demo mode.
+  if(to.path.startsWith("/invitation/")) return true;
   if(to.path==="/dashboard" && from.path==="/inscription") return "/onboarding";
   if(to.path!=="/dashboard") return true;
   try{
