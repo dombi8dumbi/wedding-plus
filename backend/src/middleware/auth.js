@@ -6,11 +6,9 @@ export async function requireAuth(req, res, next) {
     const header = req.headers.authorization || "";
     const token = header.startsWith("Bearer ") ? header.slice(7) : null;
     if (!token) return res.status(401).json({ success: false, message: "Authentification requise" });
-
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const payload = jwt.verify(token, process.env.JWT_SECRET || "wedding-plus-secret");
     const user = await User.findById(payload.sub);
     if (!user) return res.status(401).json({ success: false, message: "Utilisateur introuvable" });
-
     req.user = user;
     next();
   } catch (_error) {
