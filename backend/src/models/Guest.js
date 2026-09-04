@@ -8,6 +8,11 @@ const guestSchema = new mongoose.Schema({
   phone: { type: String, trim: true },
   group: { type: String, trim: true },
   rsvp: { type: String, enum: ["pending", "confirmed", "declined"], default: "pending" },
+  refusalReason: { type: String, trim: true },
+  invitationToken: { type: String, trim: true, index: true },
+  invitationSentAt: { type: Date },
+  reminderSentAt: { type: Date },
+  respondedAt: { type: Date },
   meal: { type: String, trim: true },
   plusOne: { type: Boolean, default: false },
   tableName: { type: String, trim: true }
