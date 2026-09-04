@@ -5,7 +5,9 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
   passwordHash: { type: String, required: true },
   role: { type: String, enum: ["user", "admin"], default: "user" },
-  weddings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Wedding" }]
+  weddings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Wedding" }],
+  weddingId: { type: mongoose.Schema.Types.ObjectId, ref: "Wedding", default: null },
+  onboardingCompleted: { type: Boolean, default: false }
 }, { timestamps: true });
 
 userSchema.methods.toJSON = function toJSON() {
